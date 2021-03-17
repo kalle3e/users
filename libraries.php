@@ -63,8 +63,7 @@ function readCSV()
             echo("$email is not a valid email address");
             exit;
         }
+        //   Emails need to be set to be lower case
         $i++;
-        //$this->checkValidCsvName($this->csvfile);
-        //$this->checkInput($name, $surname, $email);
     }
 }
