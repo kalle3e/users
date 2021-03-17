@@ -1,3 +1,6 @@
 <?php
-// New
+include 'libraries.php';
+readCSV();
+
+
 ?>
