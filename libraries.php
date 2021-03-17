@@ -55,15 +55,26 @@ function readCSV()
         $line = explode(',', $lines[$i]);
         $name = $usersArr[$i]['name'] = ucfirst(trim($line[0]));
         $surname = $usersArr[$i]['surname'] = ucfirst(trim($line[1]));
-       // $email = $usersArr[$i]['email'] = trim($line[2]);
-        $email = $usersArr[$i]['email'] = preg_match(
-            "^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$^", trim($line[2]));
-        if (! ( filter_var($email = $usersArr[$i]['email'] = trim($line[2]), FILTER_VALIDATE_EMAIL)) )
+        if (! ( filter_var($email = $usersArr[$i]['email'] = strtolower(trim($line[2])), FILTER_VALIDATE_EMAIL)) )
         {
             echo("$email is not a valid email address");
             exit;
         }
-        //   Emails need to be set to be lower case
         $i++;
     }
 }
+$servername = "localhost";
+$username = "username";
+$password = "password";
+$db = "dbname";
+try {
+    $conn = new PDO("mysql:host=$servername;dbname=myDB", $username, $password, $db);
+    // set the PDO error mode to exception
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    echo "Connected successfully";
+}
+catch(PDOException $e)
+{
+    echo "Connection failed: " . $e->getMessage();
+}
+?>
