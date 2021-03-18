@@ -7,9 +7,11 @@ $fileoptions->init();
 $conn = connectDB($fileoptions);
 $userArray = readCSV($fileoptions->fileName);
 if ($fileoptions->iscreate){
+    createDatabase();
+    createTable();
     //create table
-    insert($userArray, $conn);
     echo "/n Table Created/n";
 }
+insert($userArray, $conn);
 $conn = null;
 ?>

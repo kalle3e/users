@@ -20,12 +20,9 @@ class FileOptions
     public $host;
     public $name;
     public $password;
-    public $csvfile;
-    public $optionAction;
-    public $iscreate = false;
-    public $isfile = false;
-    public $isdryRun = false;
-    public $ishelp = false;
+    public $iscreate = 0;
+    public $isdryRun = 0;
+    public $ishelp = 0;
 
     public function __construct()
     {
@@ -40,7 +37,7 @@ class FileOptions
 
         $longopts = array(
             "file:",           // Means insert so need to input host, username and password
-            "create_table::",     // :: Optional value. Need to input host, username and password
+            "create_table",
             "dry_run",        // Also need to input csv file name
             "help",
         );
@@ -61,13 +58,13 @@ class FileOptions
                 $this->password = $cLineOptionv;
             }
             if ('dryRun' == $cLineoptionk){
-                $this->isdryRun = true;
+                $this->isdryRun = 1;
             }
             if ('create_table' == $cLineoptionk){
-                $this->iscreate= true;
+                $this->iscreate = 1;
             }
             if ('help' == $cLineoptionk){
-                $this->ishelp= true;
+                $this->ishelp= 1;
             }
         }
     }
@@ -95,6 +92,32 @@ function readCSV($filename)
         $i++;
     }
 }
+public function createDatabase()  // Now we already have role created
+    {
+        $this->pdo = $this->connect($this->ispgUser=true);
+        $sql = "CREATE DATABASE $this->crdbname
+        with OWNER = $this->role
+          encoding = 'UTF8'";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+        $this->dbname = $this->crdbname;
+        return;
+    }
+    public function createTable()
+    {
+        $this->pdo = $this->connect($this->ispgUser=false);
+        // create table if not exits syntax ************* TO DO
+        $sql = "CREATE TABLE $this->crtable (
+        name 		varchar(40) NOT NULL,
+        surname 	varchar(80) NOT NULL,
+        email		varchar(100)  PRIMARY KEY,
+        UNIQUE(email))";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+        echo "\nCreate table successful\n";
+        return;
+
+    }
 function insert($users, $conn)
 {
     $table = 'userupload';
