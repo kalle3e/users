@@ -1,6 +1,8 @@
 <?php
 include 'libraries.php';
-readCSV();
+include 'connect.php';
 
-
+$userarray = readCSV();
+insert($userarray, $conn);
+$conn = null;
 ?>

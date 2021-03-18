@@ -52,29 +52,58 @@ function readCSV()
     $i = 1;
     foreach ($lines as $line) // Ignore heading line at $i=0
     {
+        if ($i == count($lines))
+        {
+            return $usersArr;
+        }
         $line = explode(',', $lines[$i]);
-        $name = $usersArr[$i]['name'] = ucfirst(trim($line[0]));
-        $surname = $usersArr[$i]['surname'] = ucfirst(trim($line[1]));
-        if (! ( filter_var($email = $usersArr[$i]['email'] = strtolower(trim($line[2])), FILTER_VALIDATE_EMAIL)) )
+        $usersArr[$i]['name'] = ucfirst(trim($line[0]));
+        $usersArr[$i]['surname'] = ucfirst(trim($line[1]));
+        if (!( filter_var($email = $usersArr[$i]['email'] = strtolower(trim($line[2])), FILTER_VALIDATE_EMAIL)))
         {
             echo("$email is not a valid email address");
             exit;
-        }
+         }
         $i++;
     }
 }
-$servername = "localhost";
-$username = "username";
-$password = "password";
-$db = "dbname";
-try {
-    $conn = new PDO("mysql:host=$servername;dbname=myDB", $username, $password, $db);
-    // set the PDO error mode to exception
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    echo "Connected successfully";
-}
-catch(PDOException $e)
-{
-    echo "Connection failed: " . $e->getMessage();
-}
+function insert($users, $conn)
+    {
+        $table = 'userupload';
+        $i=0;
+//        $isdryRun = false;  //  Only for testing
+        $isdryRun = true;  //  Only for testing
+        foreach($users as $user)
+        {
+            if ($i < count($users)) {
+                $name = $user['name'];
+                $surname = $user['surname'];
+                $email = $user['email'];
+                $i++;
+            }
+            try
+            {
+
+                $conn->beginTransaction();
+                $sql = "insert into $table (name,surname,email) values(:name, :surname,:email)";
+                $stmt = $conn->prepare($sql);
+                $stmt->bindValue(':name', $name);
+                $stmt->bindValue(':surname', $surname);
+                $stmt->bindValue(':email', $email);
+                $stmt->execute();                // TO DO +++++++++ COMMIT ROLLBACK  +++++++++++++++++++=
+                if ($isdryRun) {
+                    $conn->rollback();
+                    echo "\n Dry Run \n";
+                    exit;
+                }
+                $conn->commit();
+            }
+            catch (\PDOException $e)
+            {
+                throw new \PDOException($e->getMessage(), (int)$e->getCode());
+            }
+        }
+        return;
+     }
+
 ?>
