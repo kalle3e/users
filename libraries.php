@@ -1,7 +1,21 @@
 <?php
-
+function connectDB($login)
+{
+    $servername = $login->host;
+    $user = $login->name;
+    $pass = $login->password;
+    $db = "userupload";
+    try {
+        $conn = new PDO("mysql:host=$servername;dbname=$db", $user, $pass);
+        echo "Connected successfully";
+    } catch (PDOException $e) {
+        echo "Connection failed: " . $e->getMessage();
+    }
+    return $conn;
+}
 class FileOptions
 {
+    public $cLineOptions;
     public $fileName;
     public $host;
     public $name;
@@ -11,44 +25,58 @@ class FileOptions
     public $iscreate = false;
     public $isfile = false;
     public $isdryRun = false;
+    public $ishelp = false;
 
     public function __construct()
     {
+
+    }
+    public function init()
+    {
         $shortopts = "";
-        $shortopts .= "h::";  // : optional
-        $shortopts .= "u::";
-        $shortopts .= "p::";
+        $shortopts .= "h:";  // h:u:p: required
+        $shortopts .= "u:";
+        $shortopts .= "p:";
 
         $longopts = array(
             "file:",           // Means insert so need to input host, username and password
-            "create_table::",     // Optional value. Need to input host, username and password
+            "create_table::",     // :: Optional value. Need to input host, username and password
             "dry_run",        // Also need to input csv file name
             "help",
         );
-        $options = getopt($shortopts, $longopts);
+        $cLineOptions = getopt($shortopts, $longopts);
 
-        switch ($options)
-        {
-            case "help":
-                break;
-            case "create_table":
-                break;
-            case "file":
-                break;
-            case "dryRun":
-                break;
-            case "h":
-            case "u":
-            case "p":
-                break;
+        foreach ($cLineOptions as $cLineoptionk => $cLineOptionv) {
+
+            if ('file' == $cLineoptionk){
+                $this->fileName = $cLineOptionv;
+            }
+            if ('h' == $cLineoptionk){
+                $this->host = $cLineOptionv;
+            }
+            if ('u' == $cLineoptionk){
+                $this->name = $cLineOptionv;
+            }
+            if ('p' == $cLineoptionk){
+                $this->password = $cLineOptionv;
+            }
+            if ('dryRun' == $cLineoptionk){
+                $this->isdryRun = true;
+            }
+            if ('create_table' == $cLineoptionk){
+                $this->iscreate= true;
+            }
+            if ('help' == $cLineoptionk){
+                $this->ishelp= true;
+            }
         }
     }
 }
-function readCSV()
+function readCSV($filename)
 {
     //Read in to array
-    $file = 'users.csv';
-    $lines = file($file);
+//    $filename = 'users.csv';
+    $lines = file($filename);
     $i = 1;
     foreach ($lines as $line) // Ignore heading line at $i=0
     {
@@ -68,21 +96,19 @@ function readCSV()
     }
 }
 function insert($users, $conn)
-    {
-        $table = 'userupload';
-        $i=0;
-//        $isdryRun = false;  //  Only for testing
-        $isdryRun = true;  //  Only for testing
-        foreach($users as $user)
-        {
-            if ($i < count($users)) {
-                $name = $user['name'];
-                $surname = $user['surname'];
-                $email = $user['email'];
-                $i++;
-            }
-            try
-            {
+{
+    $table = 'userupload';
+    $i = 0;
+    $isdryRun = false;  //  Only for testing
+//    $isdryRun = true;  //  Only for testing
+    foreach ($users as $user) {
+        if ($i < count($users)) {
+            $name = $user['name'];
+            $surname = $user['surname'];
+            $email = $user['email'];
+            $i++;
+        }
+            try {
 
                 $conn->beginTransaction();
                 $sql = "insert into $table (name,surname,email) values(:name, :surname,:email)";
@@ -90,20 +116,17 @@ function insert($users, $conn)
                 $stmt->bindValue(':name', $name);
                 $stmt->bindValue(':surname', $surname);
                 $stmt->bindValue(':email', $email);
-                $stmt->execute();                // TO DO +++++++++ COMMIT ROLLBACK  +++++++++++++++++++=
+                $stmt->execute();
                 if ($isdryRun) {
                     $conn->rollback();
                     echo "\n Dry Run \n";
                     exit;
                 }
                 $conn->commit();
-            }
-            catch (\PDOException $e)
-            {
+            } catch (\PDOException $e) {
                 throw new \PDOException($e->getMessage(), (int)$e->getCode());
-            }
         }
+    }
         return;
-     }
-
+}
 ?>
