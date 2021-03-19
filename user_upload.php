@@ -8,6 +8,7 @@ $conn = connectDB($fileoptions);
 $userArray = readCSV($fileoptions->fileName);
 if ($fileoptions->iscreate){
     createDatabase();
+    // use database;
     createTable();
     //create table
     echo "/n Table Created/n";

@@ -92,15 +92,23 @@ function readCSV($filename)
         $i++;
     }
 }
-public function createDatabase()  // Now we already have role created
+public function createUser()
+{
+    //   $user $password
+    $sql = "CREATE USER IF NOT EXISTS 'uupload'@'localhost' IDENTIED BY 'uupload'";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+}
+
+public function createDatabase()
     {
-        $this->pdo = $this->connect($this->ispgUser=true);
-        $sql = "CREATE DATABASE $this->crdbname
-        with OWNER = $this->role
-          encoding = 'UTF8'";
-        $stmt = $this->pdo->prepare($sql);
+        // $dbname
+        // DROP DATABASE IF EXISTS uupload;
+        $sql = "CREATE DATABASE uupload
+        CHARACTER SET = 'utf8'
+        COLLATE = 'utf8_general_ci'";
+        $stmt = $conn->prepare($sql);
         $stmt->execute();
-        $this->dbname = $this->crdbname;
         return;
     }
     public function createTable()
