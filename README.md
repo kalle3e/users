@@ -23,7 +23,6 @@ To --help:
 or
 --help --
 
-If –h is issued, the system exits after the message is displayed.
 If –create-table is issued, the system exits after the table is created.
 
 After the table is created, the user can issue the command to insert.
