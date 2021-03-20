@@ -19,7 +19,7 @@ class FileOptions
     public function init()
     {
         $shortopts = "";
-        $shortopts .= "h";
+        $shortopts .= "h:";
         $shortopts .= "u:";
         $shortopts .= "p:";
 
@@ -33,15 +33,15 @@ class FileOptions
 
         foreach ($cLineOptions as $cLineoptionk => $cLineOptionv) {
 
-            if ('h' == $cLineoptionk){
+            if ('help' == $cLineoptionk){
                 $this->ishelp = true;
             }
             if ('file' == $cLineoptionk){
                 $this->fileName = $cLineOptionv;
             }
-//            if ('h' == $cLineoptionk){
-//                $this->host = $cLineOptionv;
-//            }
+            if ('h' == $cLineoptionk){
+                $this->host = $cLineOptionv;
+            }
             if ('u' == $cLineoptionk){
                 $this->name = $cLineOptionv;
             }
@@ -102,7 +102,7 @@ class Db
     public function createTable()
     {
         // create table if not exits syntax ************* TO DO
-        $sql = "CREATE TABLE $this->tableName (
+        $sql = "CREATE TABLE IF NOT EXISTS $this->tableName (
         name 		varchar(40) NOT NULL,
         surname 	varchar(80) NOT NULL,
         email		varchar(100)  PRIMARY KEY,
@@ -144,33 +144,5 @@ class Db
         }
         return;
     }
-}
-function help()
-{
-    echo "\n";
-    echo "=========================================================================================";
-    echo "\n";
-    echo "--file [csv file name] – this is the name of the CSV to be parsed";
-    echo "\n";
-    echo "--create_table – this will cause the PostgreSQL users table to be built ";
-    echo "\n";
-    echo "(and no further action will be taken)";
-    echo "\n";
-    echo "--dry_run – this will be used with the --file directive in case we want ";
-    echo "\n";
-    echo "to run the script but not insert into the DB.";
-    echo "\n";
-    echo " All other functions will be executed, but the database won't be altered";
-    echo "\n";
-    echo "-u – MariaDB username";
-    echo "\n";
-    echo "-p – MariaDB password";
-    echo "\n";
-    echo "-h – MariaDB host";
-    echo "\n";
-    echo "--help – which will output the above list of directives with details.";
-    echo "\n";
-    echo "=========================================================================================";
-    echo "\n";
 }
 ?>
