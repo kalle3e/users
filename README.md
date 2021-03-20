@@ -9,8 +9,7 @@ For example use:
 
 Note, where -u and -p use your own username, password (for user for admin rights)
 To run create_table:
---file users.csv --create_table -h localhost -u userupload -p userupload
-or --create_table -h localhost -u userupload -p userupload
+--create_table -h localhost -u userupload -p userupload
 
 To insert:  where --file (use your own csv file, has .csv extension
 --file users.csv -h localhost -u userupload -p userupload
