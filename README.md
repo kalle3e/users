@@ -12,7 +12,7 @@ To run create_table:
 --file users.csv --create_table -h localhost -u userupload -p userupload
 or --create_table
 
-To insert:  where --file (use your own csv file, has .csv extension
+To insert:  where --file (use your own csv file, has .csv extension)
 --file users.csv -h localhost -u userupload -p userupload
 
 To --dry_run:
