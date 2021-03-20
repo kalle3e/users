@@ -1,18 +1,6 @@
 <?php
-function connectDB($login)
-{
-    $servername = $login->host;
-    $user = $login->name;
-    $pass = $login->password;
-    $db = "userupload";
-    try {
-        $conn = new PDO("mysql:host=$servername;dbname=$db", $user, $pass);
-        echo "Connected successfully";
-    } catch (PDOException $e) {
-        echo "Connection failed: " . $e->getMessage();
-    }
-    return $conn;
-}
+include 'connectDB.php';
+//require_once
 class FileOptions
 {
     public $cLineOptions;
@@ -92,40 +80,37 @@ function readCSV($filename)
         $i++;
     }
 }
-public function createUser()
+class Db
 {
-    //   $user $password
-    $sql = "CREATE USER IF NOT EXISTS 'uupload'@'localhost' IDENTIED BY 'uupload'";
-    $stmt = $conn->prepare($sql);
-    $stmt->execute();
-}
+    public $tableName ="userupload";
+    public $dbname = "userupload";
+    public $conn;
+    public $fileoptions;
 
-public function createDatabase()
+
+    public function __construct($user,$conn)
     {
-        // $dbname
-        // DROP DATABASE IF EXISTS uupload;
-        $sql = "CREATE DATABASE uupload
-        CHARACTER SET = 'utf8'
-        COLLATE = 'utf8_general_ci'";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute();
-        return;
+        //$this["user"] = $user;
+        $this->user = $user;
+        $this->fileoptions = $user;
+        $this->conn = $conn;
     }
     public function createTable()
     {
-        $this->pdo = $this->connect($this->ispgUser=false);
         // create table if not exits syntax ************* TO DO
-        $sql = "CREATE TABLE $this->crtable (
+        $sql = "CREATE TABLE $this->tableName (
         name 		varchar(40) NOT NULL,
         surname 	varchar(80) NOT NULL,
         email		varchar(100)  PRIMARY KEY,
         UNIQUE(email))";
-        $stmt = $this->pdo->prepare($sql);
+        $stmt = $this->conn->prepare($sql);
         $stmt->execute();
         echo "\nCreate table successful\n";
         return;
 
     }
+}
+
 function insert($users, $conn)
 {
     $table = 'userupload';
