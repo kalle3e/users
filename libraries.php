@@ -2,7 +2,7 @@
 include 'connectDB.php';
 class FileOptions
 {
-    public $cLineOptions;
+    private $cLineOptions;
     public $fileName;
     public $host;
     public $name;
@@ -81,7 +81,7 @@ function readCSV($filename)
 }
 class Db
 {
-    public $tableName ="userupload";
+    private $tableName ="userupload";
     public $conn;
     public $fileOptions;
     public $usersData;
