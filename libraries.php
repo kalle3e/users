@@ -8,9 +8,9 @@ class FileOptions
     public $host;
     public $name;
     public $password;
-    public $iscreate = 0;
-    public $isdryRun = 0;
-    public $ishelp = 0;
+    public $iscreate = false;
+    public $isdryRun = false;
+    public $ishelp = false;
 
     public function __construct()
     {
@@ -46,10 +46,13 @@ class FileOptions
                 $this->password = $cLineOptionv;
             }
             if ('dryRun' == $cLineoptionk){
-                $this->isdryRun = 1;
+                $this->isdryRun = true;
             }
             if ('create_table' == $cLineoptionk){
                 $this->iscreate = true;
+            }
+            if ('help' == $cLineoptionk){
+                $this->ishelp = true;
             }
         }
     }
@@ -143,5 +146,33 @@ class Db
         echo "\n Data Inserted\n";
         return;
     }
+}
+function help()
+{
+    echo "\n";
+    echo "=========================================================================================";
+    echo "\n";
+    echo "--file [csv file name] – this is the name of the CSV to be parsed";
+    echo "\n";
+    echo "--create_table – this will cause the PostgreSQL users table to be built ";
+    echo "\n";
+    echo "(and no further action will be taken)";
+    echo "\n";
+    echo "--dry_run – this will be used with the --file directive in case we want ";
+    echo "\n";
+    echo "to run the script but not insert into the DB.";
+    echo "\n";
+    echo " All other functions will be executed, but the database won't be altered";
+    echo "\n";
+    echo "-u – Database username";
+    echo "\n";
+    echo "-p – Database password";
+    echo "\n";
+    echo "-h –  host";
+    echo "\n";
+    echo "--help – which will output the above list of directives with details.";
+    echo "\n";
+    echo "=========================================================================================";
+    echo "\n";
 }
 ?>
