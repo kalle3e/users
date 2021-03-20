@@ -15,9 +15,10 @@ or --create_table
 To insert:  where --file (use your own csv file, has .csv extension
 --file users.csv -h localhost -u userupload -p userupload
 
-To --dryRun:
---file users.csv --dryRun -h localhost -u userupload -p userupload
+To --dry_run:
+--file users.csv --dry_run -h localhost -u userupload -p userupload
 
+To --help:
 --help --file users.csv -create_table -h localhost -u userupload -p userupload
 or
 --help --

@@ -45,7 +45,7 @@ class FileOptions
             if ('p' == $cLineoptionk){
                 $this->password = $cLineOptionv;
             }
-            if ('dryRun' == $cLineoptionk){
+            if ('dry_run' == $cLineoptionk){
                 $this->isdryRun = true;
             }
             if ('create_table' == $cLineoptionk){
@@ -92,7 +92,7 @@ class Db
     {
         //$this["user"] = $user;
         $this->users = $fileoptions;
-        $this->fileoptions = $fileoptions;
+        $this->fileOptions = $fileoptions;
         $this->usersData = $usersdata;
         $this->conn = $conn;
     }
@@ -134,7 +134,7 @@ class Db
                 $stmt->execute();
                 if ($this->fileOptions->isdryRun) {
                     $this->conn->rollback();
-                    echo "\n Dry Run \n";
+                    echo "\n Dry Run - Rollback\n";
                     exit;
                 }
                 $this->conn->commit();
