@@ -4,7 +4,6 @@ The database user: should have admin privileges in order to create a database ta
 Table to be created is called ‘userupload’
 
 For example use:
-Help: use -h
 
 --file users.csv -h -create_table -h localhost -u userupload -p userupload
 --file users.csv --create_table -h localhost -u userupload -p userupload
