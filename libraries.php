@@ -102,7 +102,6 @@ class Db
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
 
-        // create table if not exits syntax ************* TO DO
         $sql = "CREATE TABLE IF NOT EXISTS $this->tableName (
         name 		varchar(40) NOT NULL,
         surname 	varchar(80) NOT NULL,
