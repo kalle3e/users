@@ -30,5 +30,3 @@ The program will create a table called ‘userupload’.
 
 Validations:
 Emails: no apostrophes in email allowed.
-If name is KATHIE it'll be converted to Kathie
-If surname is NGUYEN it'll be converted to Nguyen
