@@ -60,7 +60,6 @@ class FileOptions
 function readCSV($filename)
 {
     //Read in to array
-//    $filename = 'users.csv';
     $lines = file($filename);
     $i = 1;
     foreach ($lines as $line) // Ignore heading line at $i=0
