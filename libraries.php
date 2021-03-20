@@ -19,7 +19,7 @@ class FileOptions
     public function init()
     {
         $shortopts = "";
-        $shortopts .= "h:";  // h:u:p: required
+        $shortopts .= "h";  // h:u:p: required
         $shortopts .= "u:";
         $shortopts .= "p:";
 
@@ -33,12 +33,15 @@ class FileOptions
 
         foreach ($cLineOptions as $cLineoptionk => $cLineOptionv) {
 
+            if ('h' == $cLineoptionk){
+                $this->ishelp = true;
+            }
             if ('file' == $cLineoptionk){
                 $this->fileName = $cLineOptionv;
             }
-            if ('h' == $cLineoptionk){
-                $this->host = $cLineOptionv;
-            }
+//            if ('h' == $cLineoptionk){
+//                $this->host = $cLineOptionv;
+//            }
             if ('u' == $cLineoptionk){
                 $this->name = $cLineOptionv;
             }
@@ -85,14 +88,16 @@ class Db
     public $tableName ="userupload";
     public $dbname = "userupload";
     public $conn;
-    public $fileoptions;
+    public $fileOptions;
+    public $usersData;
 
 
-    public function __construct($user,$conn)
+    public function __construct($fileoptions,$usersdata,$conn)
     {
         //$this["user"] = $user;
-        $this->user = $user;
-        $this->fileoptions = $user;
+        $this->users = $fileoptions;
+        $this->fileoptions = $fileoptions;
+        $this->usersData = $usersdata;
         $this->conn = $conn;
     }
     public function createTable()
@@ -109,40 +114,64 @@ class Db
         return;
 
     }
-}
-
-function insert($users, $conn)
-{
-    $table = 'userupload';
-    $i = 0;
-    $isdryRun = false;  //  Only for testing
-//    $isdryRun = true;  //  Only for testing
-    foreach ($users as $user) {
-        if ($i < count($users)) {
-            $name = $user['name'];
-            $surname = $user['surname'];
-            $email = $user['email'];
-            $i++;
-        }
+    public function insert()
+    {
+        $i = 0;
+        foreach ($this->usersData as $user) {
+            if ($i < count($this->usersData)) {
+                $name = $user['name'];
+                $surname = $user['surname'];
+                $email = $user['email'];
+                $i++;
+            }
             try {
 
-                $conn->beginTransaction();
-                $sql = "insert into $table (name,surname,email) values(:name, :surname,:email)";
-                $stmt = $conn->prepare($sql);
+                $this->conn->beginTransaction();
+                $sql = "insert into $this->tableName (name,surname,email) values(:name, :surname,:email)";
+                $stmt = $this->conn->prepare($sql);
                 $stmt->bindValue(':name', $name);
                 $stmt->bindValue(':surname', $surname);
                 $stmt->bindValue(':email', $email);
                 $stmt->execute();
-                if ($isdryRun) {
-                    $conn->rollback();
+                if ($this->fileOptions->isdryRun) {
+                    $this->conn->rollback();
                     echo "\n Dry Run \n";
                     exit;
                 }
-                $conn->commit();
+                $this->conn->commit();
             } catch (\PDOException $e) {
                 throw new \PDOException($e->getMessage(), (int)$e->getCode());
+            }
         }
-    }
         return;
+    }
+}
+function help()
+{
+    echo "\n";
+    echo "=========================================================================================";
+    echo "\n";
+    echo "--file [csv file name] – this is the name of the CSV to be parsed";
+    echo "\n";
+    echo "--create_table – this will cause the PostgreSQL users table to be built ";
+    echo "\n";
+    echo "(and no further action will be taken)";
+    echo "\n";
+    echo "--dry_run – this will be used with the --file directive in case we want ";
+    echo "\n";
+    echo "to run the script but not insert into the DB.";
+    echo "\n";
+    echo " All other functions will be executed, but the database won't be altered";
+    echo "\n";
+    echo "-u – MariaDB username";
+    echo "\n";
+    echo "-p – MariaDB password";
+    echo "\n";
+    echo "-h – MariaDB host";
+    echo "\n";
+    echo "--help – which will output the above list of directives with details.";
+    echo "\n";
+    echo "=========================================================================================";
+    echo "\n";
 }
 ?>

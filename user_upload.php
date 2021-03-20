@@ -1,19 +1,20 @@
 <?php
 include 'libraries.php';
-//include 'connectDB.php';
 $fileoptions = new FileOptions();
 $fileoptions->init();
-// new Db
-//   ** Connect DB
-$conn = connectDB($fileoptions);
-$userArray = readCSV($fileoptions->fileName);
-$db = new Db($fileoptions,$conn);
-if ($fileoptions->iscreate){
-    // use database;
-    $db->createTable();
-    //create table
-    echo "/n Table Created/n";
+if ($fileoptions->ishelp) {
+    help();
+    exit;
 }
-insert($userArray, $conn);
+$conn = connectDB($fileoptions);
+$usersArray = readCSV($fileoptions->fileName);
+$db = new Db($fileoptions,$usersArray,$conn);
+if ($fileoptions->iscreate){
+    $db->createTable();
+    echo "/n Table Created/n";
+    $conn = null;
+    exit;
+}
+$db->insert();
 $conn = null;
 ?>
