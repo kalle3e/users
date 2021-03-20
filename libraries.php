@@ -19,7 +19,7 @@ class FileOptions
     public function init()
     {
         $shortopts = "";
-        $shortopts .= "h";  // h:u:p: required
+        $shortopts .= "h";
         $shortopts .= "u:";
         $shortopts .= "p:";
 
@@ -86,7 +86,6 @@ function readCSV($filename)
 class Db
 {
     public $tableName ="userupload";
-    public $dbname = "userupload";
     public $conn;
     public $fileOptions;
     public $usersData;
