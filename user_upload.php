@@ -7,9 +7,10 @@ if ($fileoptions->ishelp){
     exit;
 }
 $conn = connectDB($fileoptions);
-$usersArray = readCSV($fileoptions->fileName);
+if (!$fileoptions->iscreate){
+    $usersArray = readCSV($fileoptions->fileName);
+}
 $db = new Db($fileoptions,$usersArray,$conn);
-
 if ($fileoptions->iscreate){
     $db->createTable();
     $conn = null;

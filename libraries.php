@@ -58,7 +58,7 @@ class FileOptions
 }
 function readCSV($filename)
 {
-    //Read in to array
+    //    Read in to array
 //    $filename = 'users.csv';
     $lines = file($filename);
     $i = 1;
@@ -96,17 +96,25 @@ class Db
     }
     public function createTable()
     {
-        $sql = "DROP TABLE IF EXISTS `$this->tableName`";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute();
+        try {
+            $sql = "DROP TABLE IF EXISTS `$this->tableName`";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+        } catch (\PDOException $e) {
+            throw new \PDOException($e->getMessage(), (int)$e->getCode());
+        }
 
-        $sql = "CREATE TABLE IF NOT EXISTS `$this->tableName` (
+        try{
+            $sql = "CREATE TABLE `$this->tableName` (
         name 		varchar(40) NOT NULL,
         surname 	varchar(80) NOT NULL,
         email		varchar(100)  PRIMARY KEY,
         UNIQUE(email))";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute();
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+        } catch (\PDOException $e) {
+            throw new \PDOException($e->getMessage(), (int)$e->getCode());
+        }
         echo "\nCreate table successful\n";
         return;
 
@@ -122,7 +130,6 @@ class Db
                 $i++;
             }
             try {
-
                 $this->conn->beginTransaction();
                 $sql = "INSERT INTO `$this->tableName` (name,surname,email) values(:name, :surname,:email)";
                 $stmt = $this->conn->prepare($sql);
