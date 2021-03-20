@@ -1,0 +1,17 @@
+Notes for using user_upload.php
+
+The database user: should have admin privileges in order to create a database table
+Table to be created is called ‘userupload’
+
+For example use:
+Help: use -h
+
+--file users.csv -h -create_table -h localhost -u userupload -p userupload
+--file users.csv --create_table -h localhost -u userupload -p userupload
+--file users.csv  -h localhost -u userupload -p userupload
+
+If –h is issued, the system exits after the message is displayed.
+If –create-table is issued, the system exits after the table is created.
+
+After the table is created, the user can issue the command to insert.
+The program will create a table called ‘userupload’.
