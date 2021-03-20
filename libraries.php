@@ -1,6 +1,5 @@
 <?php
 include 'connectDB.php';
-//require_once
 class FileOptions
 {
     public $cLineOptions;
@@ -60,6 +59,7 @@ class FileOptions
 function readCSV($filename)
 {
     //Read in to array
+//    $filename = 'users.csv';
     $lines = file($filename);
     $i = 1;
     foreach ($lines as $line) // Ignore heading line at $i=0
@@ -89,7 +89,6 @@ class Db
 
     public function __construct($fileoptions,$usersdata,$conn)
     {
-        //$this["user"] = $user;
         $this->users = $fileoptions;
         $this->fileOptions = $fileoptions;
         $this->usersData = $usersdata;
@@ -101,7 +100,7 @@ class Db
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
 
-        $sql = "CREATE TABLE IF NOT EXISTS $this->tableName (
+        $sql = "CREATE TABLE IF NOT EXISTS `$this->tableName` (
         name 		varchar(40) NOT NULL,
         surname 	varchar(80) NOT NULL,
         email		varchar(100)  PRIMARY KEY,
@@ -125,7 +124,7 @@ class Db
             try {
 
                 $this->conn->beginTransaction();
-                $sql = "INSERT INTO $this->tableName (name,surname,email) values(:name, :surname,:email)";
+                $sql = "INSERT INTO `$this->tableName` (name,surname,email) values(:name, :surname,:email)";
                 $stmt = $this->conn->prepare($sql);
                 $stmt->bindValue(':name', $name);
                 $stmt->bindValue(':surname', $surname);
