@@ -7,7 +7,6 @@ $usersArray = readCSV($fileoptions->fileName);
 $db = new Db($fileoptions,$usersArray,$conn);
 if ($fileoptions->iscreate){
     $db->createTable();
-    echo "/n Table Created/n";
     $conn = null;
     exit;
 }

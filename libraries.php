@@ -33,9 +33,6 @@ class FileOptions
 
         foreach ($cLineOptions as $cLineoptionk => $cLineOptionv) {
 
-            if ('help' == $cLineoptionk){
-                $this->ishelp = true;
-            }
             if ('file' == $cLineoptionk){
                 $this->fileName = $cLineOptionv;
             }
@@ -52,10 +49,7 @@ class FileOptions
                 $this->isdryRun = 1;
             }
             if ('create_table' == $cLineoptionk){
-                $this->iscreate = 1;
-            }
-            if ('help' == $cLineoptionk){
-                $this->ishelp= 1;
+                $this->iscreate = true;
             }
         }
     }
@@ -101,6 +95,10 @@ class Db
     }
     public function createTable()
     {
+        $sql = "DROP TABLE IF EXISTS `$this->tableName`";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+
         // create table if not exits syntax ************* TO DO
         $sql = "CREATE TABLE IF NOT EXISTS $this->tableName (
         name 		varchar(40) NOT NULL,
@@ -126,7 +124,7 @@ class Db
             try {
 
                 $this->conn->beginTransaction();
-                $sql = "insert into $this->tableName (name,surname,email) values(:name, :surname,:email)";
+                $sql = "INSERT INTO $this->tableName (name,surname,email) values(:name, :surname,:email)";
                 $stmt = $this->conn->prepare($sql);
                 $stmt->bindValue(':name', $name);
                 $stmt->bindValue(':surname', $surname);
@@ -142,6 +140,7 @@ class Db
                 throw new \PDOException($e->getMessage(), (int)$e->getCode());
             }
         }
+        echo "\n Data Inserted\n";
         return;
     }
 }
