@@ -7,6 +7,8 @@ The program expects the input file to have csv extension. It doesn’t check for
 
 For example use:
 
+******    To do - display msg if no options entered          **********
+
 Note, where -u and -p use your own username, password (for user for admin rights)
 To run create_table:
 --create_table -h localhost -u userupload -p userupload
